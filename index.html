@@ -388,19 +388,22 @@
     <div class="toolbar">
         <div class="upload-area">
             <input type="file" id="docxInput" accept=".docx" style="display: none;">
-            <button id="uploadBtn" class="btn btn-primary">📄 加载 DOCX 文档</button>
-            <button id="scanBtn" class="btn btn-outline">🔍 全文检测表达不当</button>
-            <button id="downloadFinalBtn" class="btn btn-success">⬇️ 下载 DOCX (保留格式)</button>
-            <span id="fileNameDisplay" class="file-info">未加载文档</span>
+            <button id="uploadBtn" class="btn btn-primary" data-i18n="btnLoad">📄 加载 DOCX 文档</button>
+            <button id="scanBtn" class="btn btn-outline" data-i18n="btnScan">🔍 全文检测表达不当</button>
+            <button id="downloadFinalBtn" class="btn btn-success" data-i18n="btnDownload">⬇️ 下载 DOCX (保留格式)</button>
+            <span id="fileNameDisplay" class="file-info" data-i18n="noFile">未加载文档</span>
         </div>
-        <div class="file-info">
-            ✨ 鼠标悬停段落 → 显示「AI优化此段」按钮 | 点击按钮才调用AI
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div class="file-info" data-i18n="hoverTip">
+                ✨ 鼠标悬停段落 → 显示「AI优化此段」按钮 | 点击按钮才调用AI
+            </div>
+            <button id="langToggleBtn" class="btn" title="Switch language / 切换语言">🌐 EN</button>
         </div>
     </div>
 
     <div class="api-config">
         <div style="display: flex; justify-content: space-between;">
-            <span>🔑 DeepSeek API 配置</span>
+            <span data-i18n="apiLabel">🔑 DeepSeek API 配置</span>
         </div>
         <input type="password" id="apiKeyInput" placeholder="DeepSeek API Key (sk-...)" value="">
         <div class="status-msg" id="apiStatusMsg">⚠️ 未配置API Key，AI功能不可用</div>
@@ -409,11 +412,11 @@
     <div class="editor-layout">
         <div class="document-panel">
             <div class="document-header">
-                <span>📖 文档内容 (完整保留原始格式)</span>
-                <span id="docStats" style="font-size:0.7rem;">段落数: 0</span>
+                <span data-i18n="docHeader">📖 文档内容 (完整保留原始格式)</span>
+                <span id="docStats" style="font-size:0.7rem;" data-i18n="docStatsEmpty">段落数: 0</span>
             </div>
             <div id="documentBody" class="document-content">
-                <div style="color:#94a3b8; text-align:center; padding:40px;">
+                <div style="color:#94a3b8; text-align:center; padding:40px;" data-i18n="emptyHint" data-i18n-html="true">
                     点击「加载 DOCX 文档」选择文件<br>
                     鼠标悬停段落 → 点击「AI优化此段」按钮
                 </div>
@@ -422,18 +425,157 @@
 
         <div class="suggestions-panel">
             <div class="panel-header">
-                <span>✍️ 表达建议</span>
+                <span data-i18n="suggestionsHeader">✍️ 表达建议</span>
                 <span class="badge" id="issueCountBadge">0</span>
             </div>
             <div id="suggestionsList" class="suggestions-list">
-                <div style="color:#94a3b8; text-align:center;">点击「全文检测」分析不当表达</div>
+                <div style="color:#94a3b8; text-align:center;" data-i18n="suggestionsEmpty">点击「全文检测」分析不当表达</div>
             </div>
         </div>
     </div>
-    <footer>✅ 完美保留原文档格式 | 悬停段落显示操作按钮 | 点击AI优化按钮才调用API，可预览差异后确认替换</footer>
+    <footer data-i18n="footer">✅ 完美保留原文档格式 | 悬停段落显示操作按钮 | 点击AI优化按钮才调用API，可预览差异后确认替换</footer>
 </div>
 
 <script>
+    // ============ i18n 国际化 ============
+    const I18N = {
+        zh: {
+            btnLoad: '📄 加载 DOCX 文档',
+            btnScan: '🔍 全文检测表达不当',
+            btnScanLoading: '检测中...',
+            btnDownload: '⬇️ 下载 DOCX (保留格式)',
+            noFile: '未加载文档',
+            hoverTip: '✨ 鼠标悬停段落 → 显示「AI优化此段」按钮 | 点击按钮才调用AI',
+            apiLabel: '🔑 DeepSeek API 配置',
+            apiPlaceholder: 'DeepSeek API Key (sk-...)',
+            apiNotSet: '⚠️ 未配置API Key，AI功能不可用',
+            apiOk: '✅ DeepSeek API已配置，AI功能可用',
+            apiInvalid: '⚠️ 请输入有效的DeepSeek API Key (以sk-开头)',
+            docHeader: '📖 文档内容 (完整保留原始格式)',
+            docStats: (n) => `段落数: ${n}`,
+            docStatsEmpty: '段落数: 0',
+            emptyHint: '点击「加载 DOCX 文档」选择文件<br>鼠标悬停段落 → 点击「AI优化此段」按钮',
+            suggestionsHeader: '✍️ 表达建议',
+            suggestionsEmpty: '点击「全文检测」分析不当表达',
+            suggestionsNone: '✨ 未发现明显表达问题',
+            footer: '✅ 完美保留原文档格式 | 悬停段落显示操作按钮 | 点击AI优化按钮才调用API，可预览差异后确认替换',
+            optimizeBtn: '✨ AI优化此段',
+            fixBtn: '✍️ AI优化此段落',
+            previewTitle: '✨ 优化预览',
+            previewLoading: 'AI 分析中...',
+            previewSuggestion: '📝 AI 优化建议 (差异高亮):',
+            previewLegend: '🟢 绿色新增 &nbsp; 🔴 红色删除(原文)',
+            noChange: '✨ 该段落表达流畅，无需修改 ✨',
+            cancel: '取消',
+            apply: '✅ 确认替换',
+            close: '关闭',
+            optimizeFailed: '❌ AI优化失败',
+            alertNoKey: '请先配置DeepSeek API Key',
+            alertNoDoc: '请先加载文档',
+            alertNoContent: '无文档内容',
+            alertExportFailed: '导出失败',
+            alertScanFailed: '检测失败',
+            apiErrPrefix: '请先配置有效的DeepSeek API Key',
+            apiHttpErr: (s, t) => `API错误(${s}): ${t}`,
+            sysEditor: '你是文字编辑专家，直接返回优化后的文本，不要解释',
+            sysEditorStrict: '你是专业文字编辑，只返回优化后的文本，不要任何解释或额外内容',
+            promptOptimize: (text) => `请优化下面这段话，使其更流畅、专业、简洁，修正语法问题。只返回优化后的文本：\n\n${text}`,
+            sysScan: '只返回JSON数组，不要其他内容',
+            promptScan: (text) => `分析这段话的表达问题，返回JSON数组格式：[{"phrase":"问题片段","suggestion":"修改建议"}]，如果没有问题返回空数组[]。\n\n文本：${text}`,
+            langBtn: '🌐 EN',
+            title: '文档优化助手 - 保留格式 | 手动触发AI优化',
+        },
+        en: {
+            btnLoad: '📄 Load DOCX',
+            btnScan: '🔍 Scan Full Text',
+            btnScanLoading: 'Scanning...',
+            btnDownload: '⬇️ Download DOCX (Keep Format)',
+            noFile: 'No document loaded',
+            hoverTip: '✨ Hover a paragraph → click "AI Optimize" button | API only called on click',
+            apiLabel: '🔑 DeepSeek API Configuration',
+            apiPlaceholder: 'DeepSeek API Key (sk-...)',
+            apiNotSet: '⚠️ API Key not configured, AI features unavailable',
+            apiOk: '✅ DeepSeek API configured, AI features ready',
+            apiInvalid: '⚠️ Please enter a valid DeepSeek API Key (starts with sk-)',
+            docHeader: '📖 Document Content (Original Formatting Preserved)',
+            docStats: (n) => `Paragraphs: ${n}`,
+            docStatsEmpty: 'Paragraphs: 0',
+            emptyHint: 'Click "Load DOCX" to choose a file<br>Hover a paragraph → click "AI Optimize"',
+            suggestionsHeader: '✍️ Writing Suggestions',
+            suggestionsEmpty: 'Click "Scan Full Text" to analyze writing issues',
+            suggestionsNone: '✨ No obvious writing issues found',
+            footer: '✅ Original format preserved | Hover to show actions | AI runs only on click, preview diff then confirm',
+            optimizeBtn: '✨ AI Optimize',
+            fixBtn: '✍️ Optimize This Paragraph',
+            previewTitle: '✨ Optimization Preview',
+            previewLoading: 'AI analyzing...',
+            previewSuggestion: '📝 AI Suggestion (diff highlighted):',
+            previewLegend: '🟢 Added &nbsp; 🔴 Removed (original)',
+            noChange: '✨ This paragraph reads well, no change needed ✨',
+            cancel: 'Cancel',
+            apply: '✅ Apply',
+            close: 'Close',
+            optimizeFailed: '❌ AI optimization failed',
+            alertNoKey: 'Please configure your DeepSeek API Key first',
+            alertNoDoc: 'Please load a document first',
+            alertNoContent: 'No document content',
+            alertExportFailed: 'Export failed',
+            alertScanFailed: 'Scan failed',
+            apiErrPrefix: 'Please configure a valid DeepSeek API Key',
+            apiHttpErr: (s, t) => `API error (${s}): ${t}`,
+            sysEditor: 'You are a text editor. Return only the optimized text without any explanation.',
+            sysEditorStrict: 'You are a professional text editor. Return ONLY the optimized text, no explanation or extra content.',
+            promptOptimize: (text) => `Please optimize the following paragraph to be more fluent, professional and concise, and fix grammar issues. Return only the optimized text:\n\n${text}`,
+            sysScan: 'Return only a JSON array, no other content.',
+            promptScan: (text) => `Analyze the writing issues in this paragraph and return a JSON array: [{"phrase":"issue snippet","suggestion":"how to fix"}]. Return empty array [] if no issues.\n\nText: ${text}`,
+            langBtn: '🌐 中文',
+            title: 'Article Optimizer - Format Preserved | AI on Demand',
+        }
+    };
+
+    let currentLang = localStorage.getItem('app_lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
+    function t(key, ...args) {
+        const v = I18N[currentLang][key];
+        if (typeof v === 'function') return v(...args);
+        return v ?? key;
+    }
+
+    function applyI18n() {
+        // 标题
+        document.title = t('title');
+        // 切换按钮文字
+        const langBtn = document.getElementById('langToggleBtn');
+        if (langBtn) langBtn.textContent = t('langBtn');
+        // 所有带 data-i18n 的元素
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            const useHtml = el.getAttribute('data-i18n-html') === 'true';
+            const val = I18N[currentLang][key];
+            if (val == null) return;
+            if (useHtml) el.innerHTML = val;
+            else el.textContent = val;
+        });
+        // 输入框 placeholder
+        const apiInput = document.getElementById('apiKeyInput');
+        if (apiInput) apiInput.placeholder = t('apiPlaceholder');
+        // 段落数显示
+        const docStats = document.getElementById('docStats');
+        if (docStats && paragraphData && paragraphData.length) {
+            docStats.textContent = t('docStats', paragraphData.length);
+        }
+        // 段落悬停按钮文字
+        document.querySelectorAll('.optimize-btn').forEach(b => { b.textContent = t('optimizeBtn'); });
+        document.querySelectorAll('.fix-suggestion-btn').forEach(b => { b.textContent = t('fixBtn'); });
+        // API 状态消息
+        if (typeof updateApiStatus === 'function') updateApiStatus();
+        // 建议列表(若为空提示)
+        const sl = document.getElementById('suggestionsList');
+        if (sl && sl.children.length === 1 && sl.children[0].getAttribute('data-i18n-runtime')) {
+            const k = sl.children[0].getAttribute('data-i18n-runtime');
+            sl.children[0].textContent = t(k);
+        }
+    }
+
     // 核心数据
     let paragraphData = [];           // { html, text, element }
     let paragraphElements = [];
@@ -455,19 +597,19 @@
     function updateApiStatus() {
         const msg = document.getElementById('apiStatusMsg');
         if(apiKey && apiKey.trim().startsWith('sk-')) {
-            msg.innerHTML = '✅ DeepSeek API已配置，AI功能可用';
+            msg.innerHTML = t('apiOk');
             msg.style.color = '#10b981';
         } else {
-            msg.innerHTML = '⚠️ 请输入有效的DeepSeek API Key (以sk-开头)';
+            msg.innerHTML = t('apiInvalid');
             msg.style.color = '#f97316';
         }
     }
-    updateApiStatus();
-    
+
     // DeepSeek API调用
-    async function callDeepSeek(prompt, system = "你是文字编辑专家，直接返回优化后的文本，不要解释") {
+    async function callDeepSeek(prompt, system = null) {
+        if(!system) system = t('sysEditor');
         if(!apiKey || !apiKey.trim().startsWith('sk-')) {
-            throw new Error('请先配置有效的DeepSeek API Key');
+            throw new Error(t('apiErrPrefix'));
         }
         const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
             method: 'POST',
@@ -488,34 +630,33 @@
         });
         if(!response.ok) {
             const errText = await response.text();
-            throw new Error(`API错误(${response.status}): ${errText.substring(0,100)}`);
+            throw new Error(t('apiHttpErr', response.status, errText.substring(0,100)));
         }
         const data = await response.json();
         return data.choices[0].message.content.trim();
     }
-    
+
     // 优化文本
     async function optimizeText(text) {
-        return await callDeepSeek(`请优化下面这段话，使其更流畅、专业、简洁，修正语法问题。只返回优化后的文本：\n\n${text}`, 
-            "你是专业文字编辑，只返回优化后的文本，不要任何解释或额外内容");
+        return await callDeepSeek(t('promptOptimize', text), t('sysEditorStrict'));
     }
     
     // 加载DOCX
     async function loadDocx(file) {
         if(!file) return;
-        
+
         const arrayBuffer = await file.arrayBuffer();
         const result = await mammoth.convertToHtml({ arrayBuffer });
         let html = result.value;
-        
+
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
-        
+
         // 提取可优化的文本块
         const selectors = 'p, h1, h2, h3, h4, h5, h6, li, td, th';
         let blocks = [];
         const elements = tempDiv.querySelectorAll(selectors);
-        
+
         if(elements.length > 0) {
             elements.forEach(el => {
                 const text = el.innerText.trim();
@@ -538,55 +679,56 @@
                 });
             }
         }
-        
+
         paragraphData = blocks;
         renderDocument();
-        document.getElementById('docStats').innerHTML = `段落数: ${blocks.length}`;
+        document.getElementById('docStats').innerHTML = t('docStats', blocks.length);
         document.getElementById('fileNameDisplay').innerHTML = file.name;
         issuesList = [];
         document.getElementById('issueCountBadge').innerText = '0';
-        document.getElementById('suggestionsList').innerHTML = '<div style="color:#94a3b8; text-align:center;">点击「全文检测」分析不当表达</div>';
-        
+        const sl = document.getElementById('suggestionsList');
+        sl.innerHTML = `<div style="color:#94a3b8; text-align:center;" data-i18n-runtime="suggestionsEmpty">${t('suggestionsEmpty')}</div>`;
+
         // 关闭任何打开的浮层
         if(activeTooltip) {
             activeTooltip.remove();
             activeTooltip = null;
         }
     }
-    
+
     // 渲染文档
     function renderDocument() {
         const container = document.getElementById('documentBody');
         container.innerHTML = '';
         paragraphElements = [];
-        
+
         paragraphData.forEach((data, idx) => {
             const wrapper = document.createElement('div');
             wrapper.className = 'doc-paragraph-container';
             wrapper.setAttribute('data-idx', idx);
-            
+
             // 内容区
             const contentDiv = document.createElement('div');
             contentDiv.className = 'paragraph-content';
             contentDiv.innerHTML = data.html;
-            
+
             // 操作按钮区
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'paragraph-actions';
             actionsDiv.innerHTML = `
-                <button class="action-btn optimize-btn" data-idx="${idx}">✨ AI优化此段</button>
+                <button class="action-btn optimize-btn" data-idx="${idx}">${t('optimizeBtn')}</button>
             `;
-            
+
             wrapper.appendChild(contentDiv);
             wrapper.appendChild(actionsDiv);
             container.appendChild(wrapper);
             paragraphElements.push(wrapper);
-            
+
             // 存储元素引用
             data.element = wrapper;
             data.contentDiv = contentDiv;
         });
-        
+
         // 绑定优化按钮事件
         document.querySelectorAll('.optimize-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -600,59 +742,59 @@
     // 显示优化预览浮层
     async function showOptimizePreview(idx) {
         if(!apiKey || !apiKey.trim().startsWith('sk-')) {
-            alert('请先配置DeepSeek API Key');
+            alert(t('alertNoKey'));
             return;
         }
-        
+
         // 关闭已有浮层
         if(activeTooltip) {
             activeTooltip.remove();
             activeTooltip = null;
         }
-        
+
         const targetElem = paragraphElements[idx];
         const rect = targetElem.getBoundingClientRect();
-        
+
         // 创建浮层
         const tooltip = document.createElement('div');
         tooltip.className = 'preview-tooltip';
-        tooltip.innerHTML = '<div class="loading"><span class="spinner"></span> AI 分析中...</div>';
+        tooltip.innerHTML = `<div class="loading"><span class="spinner"></span> ${t('previewLoading')}</div>`;
         document.body.appendChild(tooltip);
-        
+
         tooltip.style.top = rect.bottom + window.scrollY + 8 + 'px';
         tooltip.style.left = Math.max(10, rect.left + window.scrollX) + 'px';
         activeTooltip = tooltip;
-        
+
         try {
             const originalText = paragraphData[idx].text;
             const optimized = await optimizeText(originalText);
-            
+
             // 比较差异
             const diffHtml = getDiffHtml(originalText, optimized);
-            
+
             let content = '';
             if(diffHtml === null) {
-                content = '<div class="no-change-msg">✨ 该段落表达流畅，无需修改 ✨</div>';
+                content = `<div class="no-change-msg">${t('noChange')}</div>`;
             } else {
                 content = `
-                    <div style="margin-bottom:8px; font-weight:500;">📝 AI 优化建议 (差异高亮):</div>
+                    <div style="margin-bottom:8px; font-weight:500;">${t('previewSuggestion')}</div>
                     <div style="background:#0f172a; padding:10px; border-radius:12px; max-height:250px; overflow:auto; font-size:0.8rem;">${diffHtml}</div>
-                    <div style="margin-top:6px; font-size:0.7rem; color:#94a3b8;">🟢 绿色新增 &nbsp; 🔴 红色删除(原文)</div>
+                    <div style="margin-top:6px; font-size:0.7rem; color:#94a3b8;">${t('previewLegend')}</div>
                 `;
             }
-            
+
             tooltip.innerHTML = `
-                <div style="margin-bottom:8px; font-weight:500;">✨ 优化预览</div>
+                <div style="margin-bottom:8px; font-weight:500;">${t('previewTitle')}</div>
                 ${content}
                 <div class="preview-actions">
-                    <button class="reject-btn">取消</button>
-                    ${diffHtml === null ? '' : '<button class="apply-btn">✅ 确认替换</button>'}
+                    <button class="reject-btn">${t('cancel')}</button>
+                    ${diffHtml === null ? '' : `<button class="apply-btn">${t('apply')}</button>`}
                 </div>
             `;
-            
+
             const applyBtn = tooltip.querySelector('.apply-btn');
             const rejectBtn = tooltip.querySelector('.reject-btn');
-            
+
             if(applyBtn) {
                 applyBtn.onclick = () => {
                     applyReplacement(idx, optimized);
@@ -660,16 +802,16 @@
                 };
             }
             rejectBtn.onclick = () => closeTooltip();
-            
+
         } catch(err) {
             tooltip.innerHTML = `
-                <div style="color:#f87171;">❌ AI优化失败: ${err.message}</div>
-                <div class="preview-actions"><button class="reject-btn">关闭</button></div>
+                <div style="color:#f87171;">${t('optimizeFailed')}: ${err.message}</div>
+                <div class="preview-actions"><button class="reject-btn">${t('close')}</button></div>
             `;
             tooltip.querySelector('.reject-btn').onclick = () => closeTooltip();
         }
     }
-    
+
     // 获取差异HTML
     function getDiffHtml(original, optimized) {
         if(original === optimized) return null;
@@ -683,16 +825,16 @@
         }
         return html;
     }
-    
+
     // 应用替换（保留格式）
     function applyReplacement(idx, newText) {
         const data = paragraphData[idx];
         if(!data) return;
-        
+
         // 在原HTML结构中替换文本
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = data.html;
-        
+
         function replaceTextNode(node, oldText, newText) {
             if(node.nodeType === Node.TEXT_NODE) {
                 if(node.textContent === oldText) {
@@ -706,24 +848,25 @@
             }
             return false;
         }
-        
+
         replaceTextNode(tempDiv, data.text, newText);
         const newHtml = tempDiv.innerHTML;
-        
+
         // 更新数据
         data.html = newHtml;
         data.text = newText;
-        
+
         // 更新DOM
         if(data.contentDiv) {
             data.contentDiv.innerHTML = newHtml;
         }
-        
+
         // 清除这个段落的相关问题
         issuesList = issuesList.filter(i => i.paraIndex !== idx);
         document.getElementById('issueCountBadge').innerText = issuesList.length;
         if(issuesList.length === 0) {
-            document.getElementById('suggestionsList').innerHTML = '<div style="color:#94a3b8; text-align:center;">点击「全文检测」分析不当表达</div>';
+            const sl = document.getElementById('suggestionsList');
+            sl.innerHTML = `<div style="color:#10b981;" data-i18n-runtime="suggestionsNone">${t('suggestionsNone')}</div>`;
         } else {
             displayIssues();
         }
@@ -732,32 +875,32 @@
     // 全文检测
     async function fullScan() {
         if(!paragraphData.length) {
-            alert("请先加载文档");
+            alert(t('alertNoDoc'));
             return;
         }
         if(!apiKey || !apiKey.trim().startsWith('sk-')) {
-            alert("请先配置DeepSeek API Key");
+            alert(t('alertNoKey'));
             return;
         }
-        
+
         const scanBtn = document.getElementById('scanBtn');
         scanBtn.disabled = true;
-        scanBtn.innerHTML = '<span class="spinner"></span> 检测中...';
-        
+        scanBtn.innerHTML = `<span class="spinner"></span> ${t('btnScanLoading')}`;
+
         try {
             issuesList = [];
             const total = Math.min(paragraphData.length, 50);
-            
+
             for(let i = 0; i < total; i++) {
                 const text = paragraphData[i].text;
                 if(text.length < 3) continue;
-                
+
                 try {
                     const result = await callDeepSeek(
-                        `分析这段话的表达问题，返回JSON数组格式：[{"phrase":"问题片段","suggestion":"修改建议"}]，如果没有问题返回空数组[]。\n\n文本：${text}`,
-                        "只返回JSON数组，不要其他内容"
+                        t('promptScan', text),
+                        t('sysScan')
                     );
-                    
+
                     const match = result.match(/\[[\s\S]*\]/);
                     if(match) {
                         const issues = JSON.parse(match[0]);
@@ -772,32 +915,32 @@
                         }
                     }
                 } catch(e) {
-                    console.warn(`段落${i}检测失败:`, e);
+                    console.warn(`Paragraph ${i} scan failed:`, e);
                 }
-                
+
                 // 延迟避免限流
                 await new Promise(r => setTimeout(r, 150));
             }
-            
+
             document.getElementById('issueCountBadge').innerText = issuesList.length;
             displayIssues();
             highlightIssues();
-            
+
         } catch(err) {
-            alert("检测失败: " + err.message);
+            alert(t('alertScanFailed') + ": " + err.message);
         } finally {
             scanBtn.disabled = false;
-            scanBtn.innerHTML = '🔍 全文检测表达不当';
+            scanBtn.innerHTML = t('btnScan');
         }
     }
-    
+
     function displayIssues() {
         const container = document.getElementById('suggestionsList');
         if(issuesList.length === 0) {
-            container.innerHTML = '<div style="color:#10b981;">✨ 未发现明显表达问题</div>';
+            container.innerHTML = `<div style="color:#10b981;" data-i18n-runtime="suggestionsNone">${t('suggestionsNone')}</div>`;
             return;
         }
-        
+
         let html = '';
         issuesList.forEach((issue, idx) => {
             const previewText = paragraphData[issue.paraIndex]?.text.substring(0, 80) || '';
@@ -806,12 +949,12 @@
                     <p>🔴 <strong>“${escapeHtml(issue.phrase)}”</strong></p>
                     <p>💡 ${escapeHtml(issue.suggestion)}</p>
                     <p style="font-size:0.7rem; color:#6c757d; margin-top:4px;">📍 ${escapeHtml(previewText)}${previewText.length >= 80 ? '…' : ''}</p>
-                    <button class="btn btn-sm fix-suggestion-btn" data-idx="${issue.paraIndex}" style="margin-top:8px;">✍️ AI优化此段落</button>
+                    <button class="btn btn-sm fix-suggestion-btn" data-idx="${issue.paraIndex}" style="margin-top:8px;">${t('fixBtn')}</button>
                 </div>
             `;
         });
         container.innerHTML = html;
-        
+
         document.querySelectorAll('.fix-suggestion-btn').forEach(btn => {
             btn.onclick = () => {
                 const idx = parseInt(btn.getAttribute('data-idx'));
@@ -819,7 +962,7 @@
             };
         });
     }
-    
+
     function highlightIssues() {
         // 清除旧高亮
         paragraphData.forEach((data, idx) => {
@@ -827,7 +970,7 @@
                 data.contentDiv.innerHTML = data.html;
             }
         });
-        
+
         // 添加新高亮
         issuesList.forEach(issue => {
             const data = paragraphData[issue.paraIndex];
@@ -839,18 +982,18 @@
             }
         });
     }
-    
+
     function escapeRegex(str) {
         return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-    
+
     function closeTooltip() {
         if(activeTooltip) {
             activeTooltip.remove();
             activeTooltip = null;
         }
     }
-    
+
     function escapeHtml(str) {
         if(!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -860,19 +1003,19 @@
             return m;
         });
     }
-    
+
     // 导出DOCX
     function exportDocx() {
         if(!paragraphData.length) {
-            alert("无文档内容");
+            alert(t('alertNoContent'));
             return;
         }
-        
+
         const fullHtml = `<!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>优化后文档</title>
+            <title>Optimized Document</title>
             <style>
                 body { font-family: 'Times New Roman', Times, serif; margin: 2cm; }
                 table { border-collapse: collapse; width: 100%; }
@@ -883,22 +1026,29 @@
             ${paragraphData.map(d => d.html).join('\n')}
         </body>
         </html>`;
-        
+
         try {
             const blob = htmlDocx.asBlob(fullHtml);
             saveAs(blob, `optimized_${Date.now()}.docx`);
         } catch(e) {
-            alert("导出失败: " + e.message);
+            alert(t('alertExportFailed') + ": " + e.message);
         }
     }
-    
+
+    // 语言切换
+    document.getElementById('langToggleBtn').addEventListener('click', function() {
+        currentLang = currentLang === 'zh' ? 'en' : 'zh';
+        localStorage.setItem('app_lang', currentLang);
+        applyI18n();
+    });
+
     // 事件绑定 - 确保文件选择框正常工作
     document.getElementById('uploadBtn').addEventListener('click', function(e) {
         e.preventDefault();
         const fileInput = document.getElementById('docxInput');
         fileInput.click();
     });
-    
+
     document.getElementById('docxInput').addEventListener('change', function(e) {
         if(e.target.files && e.target.files[0]) {
             loadDocx(e.target.files[0]);
@@ -906,19 +1056,20 @@
         // 清空input，允许重复选择同一文件
         e.target.value = '';
     });
-    
+
     document.getElementById('scanBtn').addEventListener('click', fullScan);
     document.getElementById('downloadFinalBtn').addEventListener('click', exportDocx);
-    
+
     // 点击其他地方关闭浮层
     document.addEventListener('click', function(e) {
         if(activeTooltip && !activeTooltip.contains(e.target)) {
             closeTooltip();
         }
     });
-    
+
+    applyI18n();
     updateApiStatus();
-    console.log('应用已启动，文件选择器正常工作');
+    console.log('App started, file selector works normally');
 </script>
 </body>
 </html>
