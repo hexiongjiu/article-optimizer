@@ -75,7 +75,13 @@ python -m http.server 8080
 
 ### 📸 截图
 
-> 📌 截图待补充 — 将使用截图放在 `docs/screenshot.png`
+**主界面 / Main Interface**
+
+![主界面](docs/screenshot-main.webp)
+
+**段落悬停操作 / Hover Actions**
+
+![段落悬停](docs/screenshot-hover.webp)
 
 ### 🤝 贡献
 
@@ -148,7 +154,13 @@ python -m http.server 8080
 
 ### 📸 Screenshots
 
-> 📌 Screenshots coming soon — place them in `docs/screenshot.png`
+**Main Interface**
+
+![Main Interface](docs/screenshot-main.webp)
+
+**Hover Actions on Paragraphs**
+
+![Hover Actions](docs/screenshot-hover.webp)
 
 ### 🤝 Contributing
 
